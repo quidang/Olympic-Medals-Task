@@ -1,11 +1,10 @@
-import { Countries } from './models/Countries.enum';
 import './style.css';
 // TODO: required imports
+import { Countries } from './models/Countries.enum';
 import { Country } from './models/Country';
 import { IResult } from './models/IResult';
-import { Sports } from './models/Sports.enum';
 import { Medals } from './models/Medals.enum';
-
+import { Sports } from './models/Sports.enum';
 
 const countrySelect: HTMLSelectElement = <HTMLSelectElement>(
   document.getElementById('country-slt')
@@ -19,75 +18,73 @@ const sportSelect: HTMLSelectElement = <HTMLSelectElement>(
 
 const addButton: HTMLElement = document.getElementById('add-btn');
 //TODO: add an eventlistener to the button to trigger addMedal
-addEventListener('click', addMedal);
+addButton.addEventListener('click', addMedal);
 
-let countries: Array<Countries> = [];
+let countries: Array<Country> = [];
 
 init();
 
 // This function sets up some display elements
 function init() {
-  // const testPtag = document.getElementById('test'); 
-  // testPtag.innerHTML = 'Something Else';
-
-  let count = 0;
+  let count1 = 0;
   for (let c in Countries) {
     if (isNaN(Number(c))) {
       let newOption: HTMLOptionElement = document.createElement('option');
       newOption.innerHTML = c;
-      newOption.value = count.toString();
-      count++;
+      newOption.value = count1.toString();
+      count1++;
       countrySelect.add(newOption);
     }
   }
 
   //TODO: populate the Sport select
-  let count_sport = 0; 
+  let count2 = 0;
   for (let s in Sports) {
     if (isNaN(Number(s))) {
       let newOption: HTMLOptionElement = document.createElement('option');
-      newOption.innerHTML = s; 
-      newOption.value = count_sport.toString(); 
-      count_sport++
+      newOption.innerHTML = s;
+      newOption.value = count2.toString();
+      count2++;
       sportSelect.add(newOption);
     }
   }
+
   //TODO: populate the Medal select
-  let count_medal = 0; 
-  for (let m in Medals) {        
+  let medal = 0;
+  for (let m in Medals) {
     if (isNaN(Number(m))) {
       let newOption: HTMLOptionElement = document.createElement('option');
-      newOption.innerHTML = m; 
-      newOption.value = count_medal.toString();
-      count_medal++
+      newOption.innerHTML = m;
+      newOption.value = medal.toString();
+      medal++;
       medalSelect.add(newOption);
     }
   }
 }
-
 
 // This function adds a medal to the countries tally
 function addMedal() {
   //TODO: complete this function
   const countryVal: number = Number(countrySelect.value);
   const countryStr: string = Countries[countryVal];
-  const newCountry: Country = new Country(countryStr); 
+  const newCountry: Country = new Country(countryStr);
 
-  //Spoprts
-  const sportVal: number = Number(sportSelect.value); 
+  // Sports
+  const sportVal: number = Number(sportSelect.value);
   const sportStr: string = Sports[sportVal];
-  //Medals
-  const medalVal: number = Number(medalSelect.value); 
+
+  // Medals
+  const medalVal: number = Number(medalSelect.value);
   const medalStr: string = Medals[medalVal];
 
-
   const newResult: IResult = {
-  medal: Medals[medalStr],
-  sport: Sports[sportStr]
-}
+    medal: Medals[medalStr],
+    sport: Sports[sportStr]
+  };
+
   newCountry.results.push(newResult);
-  
- 
+  countries.push(newCountry);
+
   displayTable();
 }
 
@@ -103,6 +100,32 @@ function displayTable() {
   newBody.id = 'results-body';
 
   // TODO: create the rows required for the new table body element
+  for (let i = 0; i < countries.length; i++) {
+    const countryElem = countries[i];
+
+    const row = document.createElement('tr');
+    
+    const countryCol = document.createElement('td');
+    countryCol.innerHTML = countryElem.name;
+
+    const goldCol = document.createElement('td');
+    goldCol.innerHTML = countryElem.totalMedalType(Medals.Gold).toString(); 
+
+    const silverCol = document.createElement('td'); 
+    silverCol.innerHTML = countryElem.totalMedalType(Medals.Silver).toString(); 
+
+    const bronzeCol = document.createElement('td'); 
+    bronzeCol.innerHTML = countryElem.totalMedalType(Medals.Bronze).toString();
+
+    // add country to row
+    row.append(countryCol);
+    row.append(goldCol);
+    row.append(silverCol);
+    row.append(bronzeCol);
+    // add row to body
+    newBody.append(row);
+  }
+
 
   // replaces the old tbody with the new one created above
   resultsBody.parentNode.replaceChild(newBody, resultsBody);

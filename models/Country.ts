@@ -22,6 +22,11 @@ export class Country {
   // given a medal type, return the amount of that type of medal
   totalMedalType(medal: Medals): number {
     // TO(DONE)DO:
-    return null;
+    let medalCount = 0; 
+        for (let i = 0; i < this.results.length; i++) {
+      if(this.results[i].medal === medal)
+      medalCount++
+    }
+    return medalCount;
   }
 }
