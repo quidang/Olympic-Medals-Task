@@ -67,7 +67,6 @@ function addMedal() {
   //TODO: complete this function
   const countryVal: number = Number(countrySelect.value);
   const countryStr: string = Countries[countryVal];
-  const newCountry: Country = new Country(countryStr);
 
   // Sports
   const sportVal: number = Number(sportSelect.value);
@@ -82,8 +81,32 @@ function addMedal() {
     sport: Sports[sportStr]
   };
 
-  newCountry.results.push(newResult);
-  countries.push(newCountry);
+  /*
+  - if array doesnt have country, create new country
+  - else dont create new country, just modify the current country
+  */
+
+  let isCountryExist: boolean = false; 
+  let existingCountryIndex: number;
+
+  for (let i = 0; i < countries.length; i++) {
+    if(countries[i].name === countryStr) {
+      isCountryExist = true;
+      existingCountryIndex = i; 
+      break;
+    } 
+  }
+
+  if(isCountryExist) {
+    // if country exists, do stuff in here. 
+    // grab the curren country. 
+    countries[existingCountryIndex].results.push(newResult)
+
+  } else {
+    const newCountry: Country = new Country(countryStr);
+    newCountry.results.push(newResult);
+    countries.push(newCountry);
+  }
 
   displayTable();
 }
@@ -104,7 +127,7 @@ function displayTable() {
     const countryElem = countries[i];
 
     const row = document.createElement('tr');
-    
+
     const countryCol = document.createElement('td');
     countryCol.innerHTML = countryElem.name;
 
@@ -117,11 +140,15 @@ function displayTable() {
     const bronzeCol = document.createElement('td'); 
     bronzeCol.innerHTML = countryElem.totalMedalType(Medals.Bronze).toString();
 
+    const totalCol = document.createElement('td');
+    totalCol.innerHTML = countryElem.totalMedals().toString(); 
+
     // add country to row
     row.append(countryCol);
     row.append(goldCol);
     row.append(silverCol);
     row.append(bronzeCol);
+    row.append(totalCol);
     // add row to body
     newBody.append(row);
   }

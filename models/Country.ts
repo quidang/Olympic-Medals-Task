@@ -15,7 +15,11 @@ export class Country {
   // return the total number of medals
   totalMedals(): number {
     //TO(DONE)DO: complete
-    return null;
+    // let count = 0;
+    // for (let i = 0; i < this.results.length; i++)
+    //   count++;
+    // return count;
+    return this.results.length;
   }
 
 
