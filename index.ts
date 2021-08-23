@@ -2,7 +2,7 @@ import { Countries } from './models/Countries.enum';
 import './style.css';
 // TODO: required imports
 import { Country } from './models/Country';
-import { Result } from './models/Result';
+import { IResult } from './models/IResult';
 import { Sports } from './models/Sports.enum';
 import { Medals } from './models/Medals.enum';
 
@@ -27,6 +27,9 @@ init();
 
 // This function sets up some display elements
 function init() {
+  // const testPtag = document.getElementById('test'); 
+  // testPtag.innerHTML = 'Something Else';
+
   let count = 0;
   for (let c in Countries) {
     if (isNaN(Number(c))) {
@@ -51,7 +54,7 @@ function init() {
   }
   //TODO: populate the Medal select
   let count_medal = 0; 
-  for (let m in Medals) {
+  for (let m in Medals) {        
     if (isNaN(Number(m))) {
       let newOption: HTMLOptionElement = document.createElement('option');
       newOption.innerHTML = m; 
@@ -66,7 +69,25 @@ function init() {
 // This function adds a medal to the countries tally
 function addMedal() {
   //TODO: complete this function
+  const countryVal: number = Number(countrySelect.value);
+  const countryStr: string = Countries[countryVal];
+  const newCountry: Country = new Country(countryStr); 
+
+  //Spoprts
+  const sportVal: number = Number(sportSelect.value); 
+  const sportStr: string = Sports[sportVal];
+  //Medals
+  const medalVal: number = Number(medalSelect.value); 
+  const medalStr: string = Medals[medalVal];
+
+
+  const newResult: IResult = {
+  medal: Medals[medalStr],
+  sport: Sports[sportStr]
+}
+  newCountry.results.push(newResult);
   
+ 
   displayTable();
 }
 
